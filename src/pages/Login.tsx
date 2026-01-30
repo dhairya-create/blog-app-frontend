@@ -4,19 +4,44 @@ import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
 import { loginUser } from "../api/auth.api";
 
+type Errors = {
+  username?: string;
+  password?: string;
+};
+
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Errors>({});
 
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
 
+  /* ---------- VALIDATION ---------- */
+  const validate = () => {
+    const newErrors: Errors = {};
+
+    if (!username.trim()) {
+      newErrors.username = "Username is required";
+    }
+
+    if (!password) {
+      newErrors.password = "Password is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  /* ---------- SUBMIT ---------- */
   const handleLogin = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
     if (loading) return;
+
+    if (!validate()) return;
 
     setLoading(true);
 
@@ -30,7 +55,6 @@ const Login = () => {
       toast.error(
         error?.response?.data?.message || "Login failed"
       );
-      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -50,6 +74,7 @@ const Login = () => {
 
         {/* Form */}
         <form onSubmit={handleLogin} className="mt-10 space-y-6">
+          {/* Username */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Username
@@ -60,10 +85,22 @@ const Login = () => {
               placeholder="your_username"
               disabled={loading}
               className="mt-1 w-full border-b border-gray-300 py-2 focus:border-black focus:outline-none disabled:opacity-50"
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setUsername(value);
+                if (errors.username && value.trim()) {
+                  setErrors((prev) => ({ ...prev, username: undefined }));
+                }
+              }}
             />
+            {errors.username && (
+              <p className="mt-1 text-xs text-gray-500 italic">
+                {errors.username}
+              </p>
+            )}
           </div>
 
+          {/* Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Password
@@ -74,8 +111,19 @@ const Login = () => {
               value={password}
               disabled={loading}
               className="mt-1 w-full border-b border-gray-300 py-2 focus:border-black focus:outline-none disabled:opacity-50"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setPassword(value);
+                if (errors.password && value) {
+                  setErrors((prev) => ({ ...prev, password: undefined }));
+                }
+              }}
             />
+            {errors.password && (
+              <p className="mt-1 text-xs text-gray-500 italic">
+                {errors.password}
+              </p>
+            )}
           </div>
 
           <button
