@@ -1,0 +1,31 @@
+/* Base toast */
+.Toastify__toast {
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+  color: #111827;
+}
+
+/* Success toast */
+.Toastify__toast--success {
+  border-left: 4px solid #111827;
+}
+
+/* Error toast */
+.Toastify__toast--error {
+  border-left: 4px solid #6b7280;
+}
+
+/* Body text */
+.Toastify__toast-body {
+  margin: 0;
+  padding: 0;
+  line-height: 1.4;
+}
+
+/* Remove icon spacing */
+.Toastify__toast-icon {
+  display: none;
+}
