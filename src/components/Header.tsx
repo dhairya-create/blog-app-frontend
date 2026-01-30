@@ -18,7 +18,7 @@ const Header = () => {
   return (
     <header className="mx-auto max-w-6xl p-4 flex items-center justify-between">
       <Link to="/" className="text-xl font-semibold">
-        MyBlog
+        Slate 🌈
       </Link>
 
       <nav className="flex items-center gap-6 text-sm font-medium">
