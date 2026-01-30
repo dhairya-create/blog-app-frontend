@@ -67,9 +67,16 @@ const Register = () => {
       toast.success("Account created successfully 🎉");
       navigate("/login");
     } catch (error: any) {
-      toast.error(
-        error?.response?.data?.message || "Registration failed"
-      );
+      const message = error?.response?.data?.message;
+
+      if (message === "Username already taken") {
+        setErrors((prev) => ({
+          ...prev,
+          username: "This username is already in use",
+        }));
+      } else {
+        toast.error(message || "Registration failed");
+      }
     } finally {
       setLoading(false);
     }
